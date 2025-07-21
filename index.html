@@ -73,16 +73,7 @@
       min-width: 30px;
     }
 
-    .dropzone {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      padding: 5px;
-      border: none;
-      position: relative;
-      min-height: 40px;
-      margin-bottom: 10px;
-    }
+   
 
     .dropzone::after {
       content: "";
@@ -95,15 +86,27 @@
     }
 
     .word {
-      background-color: #ffffff;
-      border: 1px solid #a3c2f1;
-      border-radius: 8px;
-      padding: 8px 12px;
-      cursor: grab;
-      user-select: none;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+  display: inline-block;
+  margin: 5px;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.dropzone {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  border: 2px dashed #ccc;
+  padding: 12px;
+  min-height: 60px;
+  overflow-x: auto;
+}
 
     .word.correct {
       background-color: #d4edda;
