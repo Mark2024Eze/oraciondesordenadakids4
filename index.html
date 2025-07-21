@@ -186,86 +186,76 @@
                   .map(({ value }) => value);
     }
 
-    function createSentence(sentence, index) {
-     const words = sentence.match(/[\w’'.]+|[¿?]/g) || [];
+   function createSentence(sentence, index) {
+  const container = document.getElementById("sentences-container");
 
-      const shuffled = shuffleArray([...words]);
+  const dropzone = document.createElement("div");
+  dropzone.classList.add("dropzone");
+  dropzone.dataset.index = index;
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "sentence-container";
+  const words = sentence.match(/[\w’'.]+|[¿?]/g) || [];
 
-      const number = document.createElement("div");
-      number.className = "sentence-number";
-      number.textContent = (index + 1) + ".";
-      wrapper.appendChild(number);
+  words.forEach((word) => {
+    const span = document.createElement("span");
+    span.textContent = word;
+    span.classList.add("word");
+    span.setAttribute("draggable", "true");
 
-      wrapper.dataset.index = index;
+    // Estilo para que haya espacio entre palabras
+    span.style.marginRight = "8px";
+    span.style.display = "inline-block";
 
-      const dropzone = document.createElement("div");
-      dropzone.className = "dropzone";
-      dropzone.dataset.correct = words.join(' ');
+    // Desktop
+    span.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", word);
+      span.classList.add("dragging");
+    });
 
-      shuffled.forEach(word => {
-        const span = document.createElement("span");
-        span.className = "word";
-        span.draggable = true;
-        span.textContent = word;
+    span.addEventListener("dragend", () => {
+      span.classList.remove("dragging");
+    });
 
-        span.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", word);
-          span.classList.add("dragging");
-        });
+    // Celular
+    span.addEventListener("touchstart", (e) => {
+      span.classList.add("dragging");
+      span.dataset.touching = "true";
+      e.target.touchStartX = e.touches[0].clientX;
+    });
 
-        span.addEventListener("dragend", () => {
-          span.classList.remove("dragging");
-        });
+    span.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      span.style.position = "absolute";
+      span.style.left = touch.clientX + "px";
+      span.style.top = touch.clientY + "px";
+      span.style.zIndex = "1000";
+    });
 
-        span.addEventListener("touchstart", (e) => {
-  span.classList.add("dragging");
-  span.dataset.touching = true;
-});
+    span.addEventListener("touchend", (e) => {
+      span.style.position = "";
+      span.style.zIndex = "";
+      span.style.left = "";
+      span.style.top = "";
 
-span.addEventListener("touchend", (e) => {
-  const touch = e.changedTouches[0];
-  const dropzone = span.closest(".dropzone");
-  const afterElement = getDragAfterElement(dropzone, touch.clientX);
-  const dragging = document.querySelector(".dragging");
+      const dropzone = span.closest(".dropzone");
+      const afterElement = getDragAfterElement(dropzone, e.changedTouches[0].clientX);
+      const dragging = document.querySelector(".dragging");
 
-  if (afterElement == null) {
-    dropzone.appendChild(dragging);
-  } else {
-    dropzone.insertBefore(dragging, afterElement);
-  }
+      if (afterElement == null) {
+        dropzone.appendChild(dragging);
+      } else {
+        dropzone.insertBefore(dragging, afterElement);
+      }
 
-  dragging.classList.remove("dragging");
-  delete dragging.dataset.touching;
-});
+      dragging.classList.remove("dragging");
+    });
 
+    dropzone.appendChild(span);
+  });
 
-        dropzone.appendChild(span);
-      });
+  container.appendChild(dropzone);
+}
 
-      dropzone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        const dragging = document.querySelector(".dragging");
-        if (!dragging) return;
-
-        const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
-        const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
-
-        if (sourceIndex !== targetIndex) return;
-
-        const afterElement = getDragAfterElement(dropzone, e.clientX);
-        if (afterElement == null) {
-          dropzone.appendChild(dragging);
-        } else {
-          dropzone.insertBefore(dragging, afterElement);
-        }
-      });
-
-      wrapper.appendChild(dropzone);
-      container.appendChild(wrapper);
-    }
 
     function getDragAfterElement(container, x) {
       const draggableElements = [...container.querySelectorAll(".word:not(.dragging)")];
