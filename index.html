@@ -152,6 +152,12 @@
 .word.dragging {
   pointer-events: none;
 }
+    #sentences {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 
   </style>
   <title>Ordena las oraciones</title>
@@ -199,7 +205,8 @@
     }
 
    function createSentence(sentence, index) {
-  const container = document.getElementById("sentences-container");
+  const container = document.getElementById("sentences");
+
 
   const dropzone = document.createElement("div");
   dropzone.classList.add("dropzone");
