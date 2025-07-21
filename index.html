@@ -141,6 +141,15 @@
       font-weight: bold;
       margin-top: 20px;
     }
+
+    .word.being-dragged {
+  opacity: 0.3;
+}
+
+.word.dragging {
+  pointer-events: none;
+}
+
   </style>
   <title>Ordena las oraciones</title>
 </head>
@@ -215,40 +224,48 @@
       span.classList.remove("dragging");
     });
 
-    // Celular
+           let clone = null;
+
     span.addEventListener("touchstart", (e) => {
-      span.classList.add("dragging");
-      span.dataset.touching = "true";
-      e.target.touchStartX = e.touches[0].clientX;
+      const touch = e.touches[0];
+
+      clone = span.cloneNode(true);
+      clone.classList.add("dragging");
+      clone.style.position = "absolute";
+      clone.style.left = `${touch.clientX}px`;
+      clone.style.top = `${touch.clientY}px`;
+      clone.style.zIndex = "1000";
+      clone.style.pointerEvents = "none";
+      clone.style.opacity = "0.8";
+      document.body.appendChild(clone);
+
+      span.classList.add("being-dragged");
     });
 
     span.addEventListener("touchmove", (e) => {
-      e.preventDefault();
+      if (!clone) return;
       const touch = e.touches[0];
-      span.style.position = "absolute";
-      span.style.left = touch.clientX + "px";
-      span.style.top = touch.clientY + "px";
-      span.style.zIndex = "1000";
+      clone.style.left = `${touch.clientX}px`;
+      clone.style.top = `${touch.clientY}px`;
     });
 
     span.addEventListener("touchend", (e) => {
-      span.style.position = "";
-      span.style.zIndex = "";
-      span.style.left = "";
-      span.style.top = "";
-
+      if (!clone) return;
       const dropzone = span.closest(".dropzone");
       const afterElement = getDragAfterElement(dropzone, e.changedTouches[0].clientX);
-      const dragging = document.querySelector(".dragging");
 
       if (afterElement == null) {
-        dropzone.appendChild(dragging);
+        dropzone.appendChild(span);
       } else {
-        dropzone.insertBefore(dragging, afterElement);
+        dropzone.insertBefore(span, afterElement);
       }
 
-      dragging.classList.remove("dragging");
+      span.classList.remove("being-dragged");
+      clone.remove();
+      clone = null;
     });
+
+
 
     dropzone.appendChild(span);
   });
