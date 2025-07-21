@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      
       background-color: #f4f4f9;
       margin: 0;
       padding: 0;
@@ -75,39 +74,24 @@
     }
 
     .dropzone {
-  display: flex; /* ⬅️ más compatible con móviles */
-  flex-wrap: wrap;
-  gap: 5px;
-  padding: 5px;
-  border: none; /* Quita el borde punteado */
-  position: relative;
-  min-height: 40px;
-  margin-bottom: 10px;
-}
-
-/* Línea azul debajo como "renglón" */
-.dropzone::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background-color: #007BFF; /* Azul */
-}
-
-    .dropzone::-webkit-scrollbar {
-      height: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 5px;
+      border: none;
+      position: relative;
+      min-height: 40px;
+      margin-bottom: 10px;
     }
 
-    .dropzone::-webkit-scrollbar-thumb {
-      background: #004d99;
-      border-radius: 3px;
-    }
-
-    .dropzone {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    .dropzone::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 100%;
+      background-color: #007BFF;
     }
 
     .word {
@@ -115,7 +99,7 @@
       border: 1px solid #a3c2f1;
       border-radius: 8px;
       padding: 8px 12px;
-      cursor: move;
+      cursor: grab;
       user-select: none;
       white-space: nowrap;
       flex-shrink: 0;
@@ -157,7 +141,6 @@
       font-weight: bold;
       margin-top: 20px;
     }
-
   </style>
   <title>Ordena las oraciones</title>
 </head>
@@ -171,30 +154,28 @@
 
   <div class="content">
     <div id="sentences"></div>
-
     <button onclick="checkAnswers()">Verificar</button>
     <button onclick="resetAll()">Reiniciar</button>
-
     <div class="resultado" id="resultado"></div>
   </div>
 
   <script>
     const sentences = [
-      "I get up at 7 a.m.",
-      "I don’t go to school on Saturdays.",
+      "I get up at 7 a.m",
+      "I don’t go to school on Saturdays",
       "Do I eat mushrooms?",
-      "She always drinks fruit juice.",
-      "She doesn’t have breakfast.",
+      "She always drinks fruit juice",
+      "She doesn’t have breakfast",
       "Does she like tuna?",
-      "He sometimes brushes his teeth.",
-      "He never goes to bed early.",
+      "He sometimes brushes his teeth",
+      "He never goes to bed early",
       "Does he go to school every day?",
-      "They rarely eat lettuce.",
-      "They don’t drink water.",
+      "They rarely eat lettuce",
+      "They don’t drink water",
       "Do they have breakfast every morning?",
-      "We never cook French fries.",
-      "We don’t have lunch at home.",
-      "Do we get dressed at 8 a.m?",
+      "We never cook French fries",
+      "We don’t have lunch at home",
+      "Do we get dressed at 8 a.m?"
     ];
 
     const container = document.getElementById("sentences");
@@ -206,7 +187,8 @@
     }
 
     function createSentence(sentence, index) {
-      const words = sentence.replace(/[.?]/g, '').split(' ');
+      const match = sentence.match(/(?:\w+\.\w+|\w+’\w+|\w+'\w+|[¿?]|[\wÀ-ſ]+|[.,!])/g);
+      const words = match || sentence.split(' ');
       const shuffled = shuffleArray([...words]);
 
       const wrapper = document.createElement("div");
@@ -221,9 +203,6 @@
 
       const dropzone = document.createElement("div");
       dropzone.className = "dropzone";
-
-      dropzone.dataset.index = index; // ← Agregá esta línea
-
       dropzone.dataset.correct = words.join(' ');
 
       shuffled.forEach(word => {
@@ -245,23 +224,22 @@
       });
 
       dropzone.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  const dragging = document.querySelector(".dragging");
-  if (!dragging) return;
+        e.preventDefault();
+        const dragging = document.querySelector(".dragging");
+        if (!dragging) return;
 
-  const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
-  const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
+        const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
+        const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
 
-  if (sourceIndex !== targetIndex) return; // No permitir mover entre líneas
+        if (sourceIndex !== targetIndex) return;
 
-  const afterElement = getDragAfterElement(dropzone, e.clientX);
-  if (afterElement == null) {
-    dropzone.appendChild(dragging);
-  } else {
-    dropzone.insertBefore(dragging, afterElement);
-  }
-});
-
+        const afterElement = getDragAfterElement(dropzone, e.clientX);
+        if (afterElement == null) {
+          dropzone.appendChild(dragging);
+        } else {
+          dropzone.insertBefore(dragging, afterElement);
+        }
+      });
 
       wrapper.appendChild(dropzone);
       container.appendChild(wrapper);
@@ -314,3 +292,4 @@
   </script>
 </body>
 </html>
+
