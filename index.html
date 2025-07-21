@@ -85,29 +85,25 @@
       background-color: #007BFF;
     }
 
-    .word {
-  display: inline-block;
-  margin: 5px;
-  padding: 8px 12px;
-  background-color: #f0f0f0;
+   .dropzone {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px;
+  border-bottom: 2px solid #007BFF;
+  margin-bottom: 20px;
+}
+
+.word {
+  background-color: #f2f2f2;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   cursor: grab;
   user-select: none;
   font-size: 18px;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
 }
-
-.dropzone {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  margin-bottom: 20px;
-  border: 2px dashed #ccc;
-  padding: 12px;
-  min-height: 60px;
-  overflow-x: auto;
-}
-
     .word.correct {
       background-color: #d4edda;
       border-color: #28a745;
@@ -204,9 +200,8 @@
                   .map(({ value }) => value);
     }
 
-   function createSentence(sentence, index) {
-  const container = document.getElementById("sentences");
-
+  function createSentence(sentence, index) {
+  const container = document.getElementById("sentences-container");
 
   const dropzone = document.createElement("div");
   dropzone.classList.add("dropzone");
@@ -234,48 +229,40 @@
       span.classList.remove("dragging");
     });
 
-           let clone = null;
-
+    // Celular
     span.addEventListener("touchstart", (e) => {
-      const touch = e.touches[0];
-
-      clone = span.cloneNode(true);
-      clone.classList.add("dragging");
-      clone.style.position = "absolute";
-      clone.style.left = `${touch.clientX}px`;
-      clone.style.top = `${touch.clientY}px`;
-      clone.style.zIndex = "1000";
-      clone.style.pointerEvents = "none";
-      clone.style.opacity = "0.8";
-      document.body.appendChild(clone);
-
-      span.classList.add("being-dragged");
+      span.classList.add("dragging");
+      span.dataset.touching = "true";
+      e.target.touchStartX = e.touches[0].clientX;
     });
 
     span.addEventListener("touchmove", (e) => {
-      if (!clone) return;
+      e.preventDefault();
       const touch = e.touches[0];
-      clone.style.left = `${touch.clientX}px`;
-      clone.style.top = `${touch.clientY}px`;
+      span.style.position = "absolute";
+      span.style.left = touch.clientX + "px";
+      span.style.top = touch.clientY + "px";
+      span.style.zIndex = "1000";
     });
 
     span.addEventListener("touchend", (e) => {
-      if (!clone) return;
+      span.style.position = "";
+      span.style.zIndex = "";
+      span.style.left = "";
+      span.style.top = "";
+
       const dropzone = span.closest(".dropzone");
       const afterElement = getDragAfterElement(dropzone, e.changedTouches[0].clientX);
+      const dragging = document.querySelector(".dragging");
 
       if (afterElement == null) {
-        dropzone.appendChild(span);
+        dropzone.appendChild(dragging);
       } else {
-        dropzone.insertBefore(span, afterElement);
+        dropzone.insertBefore(dragging, afterElement);
       }
 
-      span.classList.remove("being-dragged");
-      clone.remove();
-      clone = null;
+      dragging.classList.remove("dragging");
     });
-
-
 
     dropzone.appendChild(span);
   });
