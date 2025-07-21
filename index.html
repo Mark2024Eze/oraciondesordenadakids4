@@ -73,7 +73,7 @@
       min-width: 30px;
     }
 
-   
+    
 
     .dropzone::after {
       content: "";
@@ -85,7 +85,7 @@
       background-color: #007BFF;
     }
 
-   .dropzone {
+    .dropzone {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -104,6 +104,7 @@
   font-size: 18px;
   transition: transform 0.2s ease;
 }
+
     .word.correct {
       background-color: #d4edda;
       border-color: #28a745;
@@ -140,21 +141,6 @@
       font-weight: bold;
       margin-top: 20px;
     }
-
-    .word.being-dragged {
-  opacity: 0.3;
-}
-
-.word.dragging {
-  pointer-events: none;
-}
-    #sentences {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-
   </style>
   <title>Ordena las oraciones</title>
 </head>
@@ -175,20 +161,20 @@
 
   <script>
     const sentences = [
-      "I get up at 7 a.m",
-      "I don’t go to school on Saturdays",
+      "I get up at 7 a.m.",
+      "I don’t go to school on Saturdays.",
       "Do I eat mushrooms?",
-      "She always drinks fruit juice",
-      "She doesn’t have breakfast",
+      "She always drinks fruit juice.",
+      "She doesn’t have breakfast.",
       "Does she like tuna?",
-      "He sometimes brushes his teeth",
-      "He never goes to bed early",
+      "He sometimes brushes his teeth.",
+      "He never goes to bed early.",
       "Does he go to school every day?",
-      "They rarely eat lettuce",
-      "They don’t drink water",
+      "They rarely eat lettuce.",
+      "They don’t drink water.",
       "Do they have breakfast every morning?",
-      "We never cook French fries",
-      "We don’t have lunch at home",
+      "We never cook French fries.",
+      "We don’t have lunch at home.",
       "Do we get dressed at 8 a.m?"
     ];
 
@@ -200,7 +186,7 @@
                   .map(({ value }) => value);
     }
 
-  function createSentence(sentence, index) {
+   function createSentence(sentence, index) {
   const container = document.getElementById("sentences-container");
 
   const dropzone = document.createElement("div");
