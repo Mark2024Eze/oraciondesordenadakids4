@@ -1,0 +1,316 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .background-logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://github.com/Mark2024Eze/Proyecto-para-ingles/blob/main/instituto%20overcome.jpg?raw=true');
+      background-size: 50%;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.1;
+      z-index: -1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background-color: transparent;
+      position: relative;
+    }
+
+    .header img {
+      max-width: 80px;
+      margin-right: 20px;
+    }
+
+    .header .title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5em;
+      color: #004d99;
+      text-align: center;
+    }
+
+    .content {
+      padding: 20px;
+      background-color: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sentence-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .sentence-number {
+      font-weight: bold;
+      color: #004d99;
+      font-size: 1.2em;
+      min-width: 30px;
+    }
+
+    .dropzone {
+  display: flex; /* ⬅️ más compatible con móviles */
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  border: none; /* Quita el borde punteado */
+  position: relative;
+  min-height: 40px;
+  margin-bottom: 10px;
+}
+
+/* Línea azul debajo como "renglón" */
+.dropzone::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #007BFF; /* Azul */
+}
+
+    .dropzone::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .dropzone::-webkit-scrollbar-thumb {
+      background: #004d99;
+      border-radius: 3px;
+    }
+
+    .dropzone {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .word {
+      background-color: #ffffff;
+      border: 1px solid #a3c2f1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .word.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    .word.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+
+    .word.dragging {
+      opacity: 0.7;
+      background-color: #ffeeba;
+      border-color: #ffc107;
+      transition: transform 0.2s ease;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #004d99;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 10px 5px 20px 0;
+    }
+
+    button:hover {
+      background-color: #003366;
+    }
+
+    .resultado {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+  </style>
+  <title>Ordena las oraciones</title>
+</head>
+<body>
+  <div class="background-logo"></div>
+
+  <div class="header">
+    <img src="https://github.com/Mark2024Eze/Proyecto-para-ingles/blob/main/instituto%20overcome.jpg?raw=true" alt="Instituto Overcome">
+    <div class="title">Arrange the words to form correct sentences</div>
+  </div>
+
+  <div class="content">
+    <div id="sentences"></div>
+
+    <button onclick="checkAnswers()">Verificar</button>
+    <button onclick="resetAll()">Reiniciar</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    const sentences = [
+      "I get up at 7 a.m.",
+      "I don’t go to school on Saturdays.",
+      "Do I eat mushrooms?",
+      "She always drinks fruit juice.",
+      "She doesn’t have breakfast.",
+      "Does she like tuna?",
+      "He sometimes brushes his teeth.",
+      "He never goes to bed early.",
+      "Does he go to school every day?",
+      "They rarely eat lettuce.",
+      "They don’t drink water.",
+      "Do they have breakfast every morning?",
+      "We never cook French fries.",
+      "We don’t have lunch at home.",
+      "Do we get dressed at 8 a.m?",
+    ];
+
+    const container = document.getElementById("sentences");
+
+    function shuffleArray(array) {
+      return array.map(value => ({ value, sort: Math.random() }))
+                  .sort((a, b) => a.sort - b.sort)
+                  .map(({ value }) => value);
+    }
+
+    function createSentence(sentence, index) {
+      const words = sentence.replace(/[.?]/g, '').split(' ');
+      const shuffled = shuffleArray([...words]);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "sentence-container";
+
+      const number = document.createElement("div");
+      number.className = "sentence-number";
+      number.textContent = (index + 1) + ".";
+      wrapper.appendChild(number);
+
+      wrapper.dataset.index = index;
+
+      const dropzone = document.createElement("div");
+      dropzone.className = "dropzone";
+
+      dropzone.dataset.index = index; // ← Agregá esta línea
+
+      dropzone.dataset.correct = words.join(' ');
+
+      shuffled.forEach(word => {
+        const span = document.createElement("span");
+        span.className = "word";
+        span.draggable = true;
+        span.textContent = word;
+
+        span.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", word);
+          span.classList.add("dragging");
+        });
+
+        span.addEventListener("dragend", () => {
+          span.classList.remove("dragging");
+        });
+
+        dropzone.appendChild(span);
+      });
+
+      dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
+  const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
+
+  if (sourceIndex !== targetIndex) return; // No permitir mover entre líneas
+
+  const afterElement = getDragAfterElement(dropzone, e.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(dragging);
+  } else {
+    dropzone.insertBefore(dragging, afterElement);
+  }
+});
+
+
+      wrapper.appendChild(dropzone);
+      container.appendChild(wrapper);
+    }
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll(".word:not(.dragging)")];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = sentences.length;
+      const allZones = document.querySelectorAll(".dropzone");
+
+      allZones.forEach(zone => {
+        const correctAnswer = zone.dataset.correct.split(' ');
+        const userAnswer = Array.from(zone.children).map(el => el.textContent);
+
+        Array.from(zone.children).forEach((child, idx) => {
+          child.classList.remove("correct", "incorrect");
+          if (userAnswer[idx] === correctAnswer[idx]) {
+            child.classList.add("correct");
+          } else {
+            child.classList.add("incorrect");
+          }
+        });
+
+        if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
+      });
+
+      document.getElementById("resultado").textContent = `Correctas: ${correct} / ${total}`;
+    }
+
+    function resetAll() {
+      container.innerHTML = "";
+      sentences.forEach((s, i) => createSentence(s, i));
+      document.getElementById("resultado").textContent = "";
+    }
+
+    resetAll();
+  </script>
+</body>
+</html>
