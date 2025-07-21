@@ -187,8 +187,8 @@
     }
 
     function createSentence(sentence, index) {
-      const match = sentence.match(/(?:\w+\.\w+|\w+’\w+|\w+'\w+|[¿?]|[\wÀ-ſ]+|[.,!])/g);
-      const words = match || sentence.split(' ');
+     const words = sentence.match(/[\w’'.]+|[¿?]/g) || [];
+
       const shuffled = shuffleArray([...words]);
 
       const wrapper = document.createElement("div");
@@ -219,6 +219,28 @@
         span.addEventListener("dragend", () => {
           span.classList.remove("dragging");
         });
+
+        span.addEventListener("touchstart", (e) => {
+  span.classList.add("dragging");
+  span.dataset.touching = true;
+});
+
+span.addEventListener("touchend", (e) => {
+  const touch = e.changedTouches[0];
+  const dropzone = span.closest(".dropzone");
+  const afterElement = getDragAfterElement(dropzone, touch.clientX);
+  const dragging = document.querySelector(".dragging");
+
+  if (afterElement == null) {
+    dropzone.appendChild(dragging);
+  } else {
+    dropzone.insertBefore(dragging, afterElement);
+  }
+
+  dragging.classList.remove("dragging");
+  delete dragging.dataset.touching;
+});
+
 
         dropzone.appendChild(span);
       });
@@ -292,4 +314,3 @@
   </script>
 </body>
 </html>
-
