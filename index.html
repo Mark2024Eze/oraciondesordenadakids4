@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'poppins', sans-serif;
       background-color: #f4f4f9;
       margin: 0;
       padding: 0;
@@ -73,37 +73,55 @@
       min-width: 30px;
     }
 
-    
+    .dropzone {
+  display: flex; /* ⬅️ más compatible con móviles */
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  border: none; /* Quita el borde punteado */
+  position: relative;
+  min-height: 40px;
+  margin-bottom: 10px;
+}
 
-    .dropzone::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 2px;
-      width: 100%;
-      background-color: #007BFF;
+/* Línea azul debajo como "renglón" */
+.dropzone::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #007BFF; /* Azul */
+}
+
+
+
+
+    .dropzone::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .dropzone::-webkit-scrollbar-thumb {
+      background: #004d99;
+      border-radius: 3px;
     }
 
     .dropzone {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 10px;
-  border-bottom: 2px solid #007BFF;
-  margin-bottom: 20px;
-}
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
-.word {
-  background-color: #f2f2f2;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: grab;
-  user-select: none;
-  font-size: 18px;
-  transition: transform 0.2s ease;
-}
+    .word {
+      background-color: #ffffff;
+      border: 1px solid #a3c2f1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
     .word.correct {
       background-color: #d4edda;
@@ -115,12 +133,16 @@
       border-color: #dc3545;
     }
 
-    .word.dragging {
-      opacity: 0.7;
-      background-color: #ffeeba;
-      border-color: #ffc107;
-      transition: transform 0.2s ease;
-    }
+ .word.dragging {
+  opacity: 0.5;
+  background-color: #f8fd00;
+  scale: 1.1;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+
 
     button {
       padding: 10px 15px;
@@ -141,6 +163,7 @@
       font-weight: bold;
       margin-top: 20px;
     }
+
   </style>
   <title>Ordena las oraciones</title>
 </head>
@@ -154,28 +177,31 @@
 
   <div class="content">
     <div id="sentences"></div>
+
     <button onclick="checkAnswers()">Verificar</button>
     <button onclick="resetAll()">Reiniciar</button>
+
     <div class="resultado" id="resultado"></div>
   </div>
 
   <script>
     const sentences = [
-      "I get up at 7 a.m.",
-      "I don’t go to school on Saturdays.",
-      "Do I eat mushrooms?",
-      "She always drinks fruit juice.",
-      "She doesn’t have breakfast.",
-      "Does she like tuna?",
-      "He sometimes brushes his teeth.",
-      "He never goes to bed early.",
-      "Does he go to school every day?",
-      "They rarely eat lettuce.",
-      "They don’t drink water.",
-      "Do they have breakfast every morning?",
-      "We never cook French fries.",
-      "We don’t have lunch at home.",
-      "Do we get dressed at 8 a.m?"
+      "I play the piano in a band.",
+      "I don’t sing.",
+      "What do I play?",
+      "He never dances.",
+      "He doesn’t listen to rock music.",
+      "Does he play the violin?",
+      "We always dance to pop music.",
+      "We don’t play the recorder.",
+      "When do we perform?",
+      "They play the keyboard.",
+      "They don’t play the drums.",
+      "Do they do sport?",
+      "She sometimes plays classical music.",
+      "She doesn’t practise every day.",
+      "Where does she play video games?",
+      
     ];
 
     const container = document.getElementById("sentences");
@@ -186,76 +212,110 @@
                   .map(({ value }) => value);
     }
 
-   function createSentence(sentence, index) {
-  const container = document.getElementById("sentences-container");
+    function createSentence(sentence, index) {
+      const words = sentence
+  .replace(/\?/g, ' ?')   // agrega espacio antes del ?
+  .replace(/\./g, '')     // elimina el punto final
+  .split(' ');
 
-  const dropzone = document.createElement("div");
-  dropzone.classList.add("dropzone");
-  dropzone.dataset.index = index;
+      const shuffled = shuffleArray([...words]);
 
-  const words = sentence.match(/[\w’'.]+|[¿?]/g) || [];
+      const wrapper = document.createElement("div");
+      wrapper.className = "sentence-container";
 
-  words.forEach((word) => {
-    const span = document.createElement("span");
-    span.textContent = word;
-    span.classList.add("word");
-    span.setAttribute("draggable", "true");
+      const number = document.createElement("div");
+      number.className = "sentence-number";
+      number.textContent = (index + 1) + ".";
+      wrapper.appendChild(number);
 
-    // Estilo para que haya espacio entre palabras
-    span.style.marginRight = "8px";
-    span.style.display = "inline-block";
+      wrapper.dataset.index = index;
 
-    // Desktop
-    span.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", word);
-      span.classList.add("dragging");
-    });
+      const dropzone = document.createElement("div");
+      dropzone.className = "dropzone";
 
-    span.addEventListener("dragend", () => {
-      span.classList.remove("dragging");
-    });
+      dropzone.dataset.index = index; // ← Agregá esta línea
 
-    // Celular
-    span.addEventListener("touchstart", (e) => {
-      span.classList.add("dragging");
-      span.dataset.touching = "true";
-      e.target.touchStartX = e.touches[0].clientX;
-    });
+      dropzone.dataset.correct = words.join(' ');
 
-    span.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      span.style.position = "absolute";
-      span.style.left = touch.clientX + "px";
-      span.style.top = touch.clientY + "px";
-      span.style.zIndex = "1000";
-    });
+      shuffled.forEach(word => {
+        const span = document.createElement("span");
+        span.className = "word";
+span.textContent = word; // ⬅️ ESTA LÍNEA ES LA CLAVE
 
-    span.addEventListener("touchend", (e) => {
-      span.style.position = "";
-      span.style.zIndex = "";
-      span.style.left = "";
-      span.style.top = "";
 
-      const dropzone = span.closest(".dropzone");
-      const afterElement = getDragAfterElement(dropzone, e.changedTouches[0].clientX);
-      const dragging = document.querySelector(".dragging");
+        span.draggable = true;
 
-      if (afterElement == null) {
-        dropzone.appendChild(dragging);
-      } else {
-        dropzone.insertBefore(dragging, afterElement);
-      }
 
-      dragging.classList.remove("dragging");
-    });
+// Eventos para escritorio
+span.addEventListener("dragstart", (e) => {
+  e.dataTransfer.setData("text/plain", word);
+  span.classList.add("dragging");
+});
 
-    dropzone.appendChild(span);
-  });
+span.addEventListener("dragend", () => {
+  span.classList.remove("dragging");
+});
 
-  container.appendChild(dropzone);
-}
+        // Soporte touch para móviles
+span.addEventListener("touchstart", handleTouchStart);
+span.addEventListener("touchmove", handleTouchMove);
+span.addEventListener("touchend", handleTouchEnd);
 
+// Eventos para móviles (touch)
+span.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  span.classList.add("dragging");
+  span.touchStartX = e.touches[0].clientX;
+});
+
+span.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const dropzone = dragging.parentElement;
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+
+  if (el && el.classList.contains("word") && el !== dragging && el.parentElement === dropzone) {
+    const words = [...dropzone.querySelectorAll(".word:not(.dragging)")];
+    const index = words.indexOf(el);
+    if (index !== -1) {
+      dropzone.insertBefore(dragging, el);
+    }
+  }
+});
+
+
+span.addEventListener("touchend", () => {
+  span.classList.remove("dragging");
+});
+
+
+        dropzone.appendChild(span);
+      });
+
+      dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
+  const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
+
+  if (sourceIndex !== targetIndex) return; // No permitir mover entre líneas
+
+  const afterElement = getDragAfterElement(dropzone, e.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(dragging);
+  } else {
+    dropzone.insertBefore(dragging, afterElement);
+  }
+});
+
+
+      wrapper.appendChild(dropzone);
+      container.appendChild(wrapper);
+    }
 
     function getDragAfterElement(container, x) {
       const draggableElements = [...container.querySelectorAll(".word:not(.dragging)")];
@@ -299,6 +359,32 @@
       sentences.forEach((s, i) => createSentence(s, i));
       document.getElementById("resultado").textContent = "";
     }
+
+    let touchedElement = null;
+
+function handleTouchStart(e) {
+  touchedElement = e.target;
+  touchedElement.classList.add("dragging");
+  e.stopPropagation();
+}
+
+function handleTouchMove(e) {
+  const touch = e.touches[0];
+  const dropzone = touchedElement.closest(".dropzone");
+  const afterElement = getDragAfterElement(dropzone, touch.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(touchedElement);
+  } else {
+    dropzone.insertBefore(touchedElement, afterElement);
+  }
+}
+
+function handleTouchEnd(e) {
+  if (touchedElement) {
+    touchedElement.classList.remove("dragging");
+    touchedElement = null;
+  }
+}
 
     resetAll();
   </script>
