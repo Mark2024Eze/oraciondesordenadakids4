@@ -123,16 +123,21 @@
 
     
 
-   .word {
+  .word {
   background-color: #ffffff;
   border: 1px solid #a3c2f1;
   border-radius: 8px;
   padding: 8px 12px;
   cursor: move;
   user-select: none;
-  flex-shrink: 0;
-  white-space: normal; /* ✅ Esto permite que la palabra se adapte al ancho */
+  white-space: normal;
+  /* 🔥 Este es el que tenés que quitar */
+  /* flex-shrink: 0; ❌ */
+
+  /* ✅ NUEVO: permití que se ajuste el tamaño y pase de línea */
+  flex: 0 1 auto;
 }
+
 
 
     .word.correct {
