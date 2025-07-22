@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html> 
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordenar oraciones</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'poppins', sans-serif;
       background-color: #f4f4f9;
       margin: 0;
       padding: 0;
@@ -26,7 +25,7 @@
       background-size: 50%;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.08;
+      opacity: 0.1;
       z-index: -1;
     }
 
@@ -51,119 +50,350 @@
       font-size: 1.5em;
       color: #004d99;
       text-align: center;
-      font-weight: 700;
     }
 
     .content {
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-      overflow-x: visible;
-    }
+  padding: 20px;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
+  overflow-x: visible; /* ✅ O visible/auto según necesites */
+}
 
-    .sentence-container {
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      padding: 16px;
-      margin-bottom: 20px;
-    }
+   .sentence-container {
+  margin-bottom: 20px;
+}
 
-    .sentence-label {
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: block;
+
+    .sentence-number {
+      font-weight: bold;
       color: #004d99;
+      font-size: 1.2em;
+      min-width: 30px;
     }
 
-    .dropzone {
-      display: flex;
-      flex-wrap: wrap;
-      white-space: normal;
-      overflow-x: visible;
-      gap: 5px;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 5px;
-      position: relative;
-      min-height: 40px;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      background-color: #fafafa;
+.dropzone {
+  display: flex;
+  flex-wrap: wrap;
+  white-space: normal;
+  overflow-x: visible;
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  position: relative;
+  min-height: 40px;
+  margin-bottom: 10px;
+}
+
+
+
+
+
+/* Línea azul debajo como "renglón" */
+.dropzone::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #007BFF; /* Azul */
+  width: 100%;
+
+}
+
+
+
+
+    .dropzone::-webkit-scrollbar {
+      height: 6px;
     }
 
-    .dropzone:empty::before {
-      content: 'Arrastrá aquí';
-      color: #bbb;
-      font-style: italic;
+    .dropzone::-webkit-scrollbar-thumb {
+      background: #004d99;
+      border-radius: 3px;
     }
 
-    .word-bank {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      padding: 10px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 20px;
+    
+
+  .word {
+  background-color: #ffffff;
+  border: 1px solid #a3c2f1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: move;
+  user-select: none;
+  white-space: normal;
+}
+
+
+
+    .word.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
     }
 
-    .word {
-      background-color: #e3f2fd;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 14px;
-      font-weight: 500;
-      cursor: move;
-      user-select: none;
-      white-space: normal;
-      transition: transform 0.2s ease;
+    .word.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
     }
 
-    .word:active {
-      transform: scale(1.05);
-    }
+ .word.dragging {
+  opacity: 0.5;
+  background-color: #f8fd00;
+  scale: 1.1;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+
 
     button {
-      background-color: #007BFF;
-      color: white;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 18px;
+      padding: 10px 15px;
+      font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      background-color: #004d99;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 10px 5px 20px 0;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #003366;
     }
+
+    .resultado {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
   </style>
+  <title>Ordena las oraciones</title>
 </head>
 <body>
   <div class="background-logo"></div>
+
   <div class="header">
-    <img src="https://i.ibb.co/GPf1Kt0/logo.png" alt="Logo">
-    <h1 class="title">Ordena las oraciones</h1>
+    <img src="https://github.com/Mark2024Eze/Proyecto-para-ingles/blob/main/instituto%20overcome.jpg?raw=true" alt="Instituto Overcome">
+    <div class="title">Arrange the words to form correct sentences</div>
   </div>
+
   <div class="content">
-    <!-- Aquí irían las oraciones y zonas de arrastre -->
-    <div class="sentence-container">
-      <span class="sentence-label">1.</span>
-      <div class="dropzone"></div>
-    </div>
+    <div id="sentences"></div>
 
-    <div class="word-bank">
-      <div class="word" draggable="true">She</div>
-      <div class="word" draggable="true">is</div>
-      <div class="word" draggable="true">reading</div>
-      <div class="word" draggable="true">a</div>
-      <div class="word" draggable="true">book</div>
-    </div>
+    <button onclick="checkAnswers()">Verificar</button>
+    <button onclick="resetAll()">Reiniciar</button>
 
-    <button>Verificar</button>
+    <div class="resultado" id="resultado"></div>
   </div>
+
+  <script>
+    const sentences = [
+      "I get up at 7 a.m",
+"I don’t go to school on Saturdays",
+"Do I eat mushrooms?",
+"She always drinks fruit juice",
+"She doesn’t have breakfast",
+"Does she like tuna?",
+"He sometimes brushes his teeth",
+"He never goes to bed early",
+"Does he go to school every day?",
+"They rarely eat lettuce.",
+"They don’t drink water",
+"Do they have breakfast every morning?",
+"We never cook French fries",
+"We don’t have lunch at home",
+"Do we get dressed at 8 a.m?",
+     
+      
+    ];
+
+    const container = document.getElementById("sentences");
+
+    function shuffleArray(array) {
+      return array.map(value => ({ value, sort: Math.random() }))
+                  .sort((a, b) => a.sort - b.sort)
+                  .map(({ value }) => value);
+    }
+
+    function createSentence(sentence, index) {
+      const words = sentence
+  .replace(/\?/g, ' ?')   // agrega espacio antes del ?
+  .replace(/\./g, '')     // elimina el punto final
+  .split(' ');
+
+      const shuffled = shuffleArray([...words]);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "sentence-container";
+
+      const number = document.createElement("div");
+      number.className = "sentence-number";
+      number.textContent = (index + 1) + ".";
+      wrapper.appendChild(number);
+
+      wrapper.dataset.index = index;
+
+      const dropzone = document.createElement("div");
+      dropzone.className = "dropzone";
+
+      dropzone.dataset.index = index; // ← Agregá esta línea
+
+      dropzone.dataset.correct = words.join(' ');
+
+      shuffled.forEach(word => {
+        const span = document.createElement("span");
+        span.className = "word";
+span.textContent = word; // ⬅️ ESTA LÍNEA ES LA CLAVE
+
+
+        span.draggable = true;
+
+
+// Eventos para escritorio
+span.addEventListener("dragstart", (e) => {
+  e.dataTransfer.setData("text/plain", word);
+  span.classList.add("dragging");
+});
+
+span.addEventListener("dragend", () => {
+  span.classList.remove("dragging");
+});
+
+        // Soporte touch para móviles
+span.addEventListener("touchstart", handleTouchStart);
+span.addEventListener("touchmove", handleTouchMove);
+span.addEventListener("touchend", handleTouchEnd);
+
+// Eventos para móviles (touch)
+span.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  span.classList.add("dragging");
+  span.touchStartX = e.touches[0].clientX;
+});
+
+span.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const dropzone = dragging.parentElement;
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+
+  if (el && el.classList.contains("word") && el !== dragging && el.parentElement === dropzone) {
+    const words = [...dropzone.querySelectorAll(".word:not(.dragging)")];
+    const index = words.indexOf(el);
+    if (index !== -1) {
+      dropzone.insertBefore(dragging, el);
+    }
+  }
+});
+
+
+span.addEventListener("touchend", () => {
+  span.classList.remove("dragging");
+});
+
+
+        dropzone.appendChild(span);
+      });
+
+      dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const dragging = document.querySelector(".dragging");
+  if (!dragging) return;
+
+  const sourceIndex = dragging.closest(".sentence-container")?.dataset.index;
+  const targetIndex = dropzone.closest(".sentence-container")?.dataset.index;
+
+  if (sourceIndex !== targetIndex) return; // No permitir mover entre líneas
+
+  const afterElement = getDragAfterElement(dropzone, e.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(dragging);
+  } else {
+    dropzone.insertBefore(dragging, afterElement);
+  }
+});
+
+
+      wrapper.appendChild(dropzone);
+      container.appendChild(wrapper);
+    }
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll(".word:not(.dragging)")];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = sentences.length;
+      const allZones = document.querySelectorAll(".dropzone");
+
+      allZones.forEach(zone => {
+        const correctAnswer = zone.dataset.correct.split(' ');
+        const userAnswer = Array.from(zone.children).map(el => el.textContent);
+
+        Array.from(zone.children).forEach((child, idx) => {
+          child.classList.remove("correct", "incorrect");
+          if (userAnswer[idx] === correctAnswer[idx]) {
+            child.classList.add("correct");
+          } else {
+            child.classList.add("incorrect");
+          }
+        });
+
+        if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
+      });
+
+      document.getElementById("resultado").textContent = Correctas: ${correct} / ${total};
+    }
+
+    function resetAll() {
+      container.innerHTML = "";
+      sentences.forEach((s, i) => createSentence(s, i));
+      document.getElementById("resultado").textContent = "";
+    }
+
+    let touchedElement = null;
+
+function handleTouchStart(e) {
+  touchedElement = e.target;
+  touchedElement.classList.add("dragging");
+  e.stopPropagation();
+}
+
+function handleTouchMove(e) {
+  const touch = e.touches[0];
+  const dropzone = touchedElement.closest(".dropzone");
+  const afterElement = getDragAfterElement(dropzone, touch.clientX);
+  if (afterElement == null) {
+    dropzone.appendChild(touchedElement);
+  } else {
+    dropzone.insertBefore(touchedElement, afterElement);
+  }
+}
+
+function handleTouchEnd(e) {
+  if (touchedElement) {
+    touchedElement.classList.remove("dragging");
+    touchedElement = null;
+  }
+}
+
+    resetAll();
+  </script>
 </body>
 </html>
