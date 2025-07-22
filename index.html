@@ -74,15 +74,18 @@
     }
 
     .dropzone {
-  display: flex; /* ⬅️ más compatible con móviles */
-  flex-wrap: wrap;
+  display: flex;
+  flex-wrap: nowrap;        /* ❌ No permitir saltos de línea */
+  overflow-x: auto;         /* ✅ Activar scroll horizontal si es necesario */
+  white-space: nowrap;      /* ✅ Asegurar que todo quede en línea */
   gap: 5px;
   padding: 5px;
-  border: none; /* Quita el borde punteado */
+  border: none;
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
 }
+
 
 /* Línea azul debajo como "renglón" */
 .dropzone::after {
@@ -186,21 +189,22 @@
 
   <script>
     const sentences = [
-      "I play the piano in a band.",
-      "I don’t sing.",
-      "What do I play?",
-      "He never dances.",
-      "He doesn’t listen to rock music.",
-      "Does he play the violin?",
-      "We always dance to pop music.",
-      "We don’t play the recorder.",
-      "When do we perform?",
-      "They play the keyboard.",
-      "They don’t play the drums.",
-      "Do they do sport?",
-      "She sometimes plays classical music.",
-      "She doesn’t practise every day.",
-      "Where does she play video games?",
+      "I get up at 7 a.m",
+"I don’t go to school on Saturdays",
+"Do I eat mushrooms?",
+"She always drinks fruit juice",
+"She doesn’t have breakfast",
+"Does she like tuna?",
+"He sometimes brushes his teeth",
+"He never goes to bed early",
+"Does he go to school every day?",
+"They rarely eat lettuce.",
+"They don’t drink water",
+"Do they have breakfast every morning?",
+"We never cook French fries",
+"We don’t have lunch at home",
+"Do we get dressed at 8 a.m?",
+     
       
     ];
 
