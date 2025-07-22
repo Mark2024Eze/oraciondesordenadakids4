@@ -74,12 +74,14 @@
       min-width: 30px;
     }
 
- .dropzone {
-  display: flex; /* ⬅️ más compatible con móviles */
-  flex-wrap: wrap;
+.dropzone {
+  display: flex;
+  flex-wrap: wrap;          /* ✔ Permite salto de línea */
+  overflow-x: visible;      /* ✔ No scroll horizontal */
+  white-space: normal;      /* ✔ Permitir que el texto salte */
   gap: 5px;
   padding: 5px;
-  border: none; /* Quita el borde punteado */
+  border: none;
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
@@ -96,6 +98,8 @@
   height: 2px;
   width: 100%;
   background-color: #007BFF; /* Azul */
+  width: 100%;
+
 }
 
 
