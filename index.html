@@ -60,10 +60,12 @@
   overflow-x: visible; /* ✅ O visible/auto según necesites */
 }
 
-   .sentence-container {
-  margin-bottom: 20px;
-}
-
+    .sentence-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
 
     .sentence-number {
       font-weight: bold;
@@ -72,22 +74,30 @@
       min-width: 30px;
     }
 
-.dropzone {
+   .dropzone {
   display: flex;
-  flex-wrap: wrap;
-  white-space: normal;
-  overflow-x: visible;
+  flex-wrap: nowrap;           /* Mantener en una línea */
+  overflow-x: auto;            /* Habilita el scroll horizontal */
+  overflow-y: hidden;          /* Oculta el scroll vertical innecesario */
+  white-space: nowrap;
   gap: 5px;
-  width: 100%;
-  box-sizing: border-box;
   padding: 5px;
+  border: none;
   position: relative;
-  min-height: 40px;
+  min-height: 50px;
   margin-bottom: 10px;
+  max-width: 100%;             /* 🔁 Imprescindible para que respete el ancho del contenedor */
+  box-sizing: border-box;
 }
 
-
-
+.dropzone::before {
+  content: "← Scroll →";
+  font-size: 12px;
+  color: #999;
+  position: absolute;
+  top: -16px;
+  right: 0;
+}
 
 
 /* Línea azul debajo como "renglón" */
@@ -99,8 +109,6 @@
   height: 2px;
   width: 100%;
   background-color: #007BFF; /* Azul */
-  width: 100%;
-
 }
 
 
@@ -115,19 +123,21 @@
       border-radius: 3px;
     }
 
-    
+    .dropzone {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
-  .word {
-  background-color: #ffffff;
-  border: 1px solid #a3c2f1;
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: move;
-  user-select: none;
-  white-space: normal;
-}
-
-
+    .word {
+      background-color: #ffffff;
+      border: 1px solid #a3c2f1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
     .word.correct {
       background-color: #d4edda;
@@ -206,7 +216,7 @@
 "Do they have breakfast every morning?",
 "We never cook French fries",
 "We don’t have lunch at home",
-"Do we get dressed at 8 a.m?",
+"Do we get dressed at 8 a.m?",
      
       
     ];
@@ -247,7 +257,7 @@
       shuffled.forEach(word => {
         const span = document.createElement("span");
         span.className = "word";
-span.textContent = word; // ⬅️ ESTA LÍNEA ES LA CLAVE
+span.textContent = word; // ⬅ ESTA LÍNEA ES LA CLAVE
 
 
         span.draggable = true;
