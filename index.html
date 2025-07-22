@@ -75,13 +75,11 @@
     }
 
  .dropzone {
-  display: flex;
-  flex-wrap: wrap;          /* ✔ Permite salto de línea */
-  overflow-x: visible;      /* ✔ No scroll horizontal */
-  white-space: normal;      /* ✔ Permitir que el texto salte */
+  display: flex; /* ⬅️ más compatible con móviles */
+  flex-wrap: wrap;
   gap: 5px;
   padding: 5px;
-  border: none;
+  border: none; /* Quita el borde punteado */
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
