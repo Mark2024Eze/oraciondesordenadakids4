@@ -76,9 +76,9 @@
 
  .dropzone {
   display: flex;
-  flex-wrap: wrap;          /* ✅ Permitir que las palabras salten a la siguiente línea */
-  overflow-x: visible;      /* ✅ No scroll horizontal */
-  white-space: normal;      /* ✅ Permitir ajuste de texto */
+  flex-wrap: wrap;          /* ✔ Permite salto de línea */
+  overflow-x: visible;      /* ✔ No scroll horizontal */
+  white-space: normal;      /* ✔ Permitir que el texto salte */
   gap: 5px;
   padding: 5px;
   border: none;
@@ -86,9 +86,6 @@
   min-height: 40px;
   margin-bottom: 10px;
 }
-
-
-
 
 
 
@@ -127,7 +124,7 @@
       padding: 8px 12px;
       cursor: move;
       user-select: none;
-      white-space: nowrap;
+      white-space: normal; /* ✅ Permite que la palabra salte de línea si es necesario */
       flex-shrink: 0;
     }
 
