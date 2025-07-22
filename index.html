@@ -53,17 +53,18 @@
     }
 
     .content {
-  padding: 20px;
-  background-color: transparent;
-  position: relative;
-  z-index: 1;
-  overflow-x: visible; /* ✅ O visible/auto según necesites */
-}
+      padding: 20px;
+      background-color: transparent;
+      position: relative;
+      z-index: 1;
+    }
 
-   .sentence-container {
-  margin-bottom: 20px;
-}
-
+    .sentence-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
 
     .sentence-number {
       font-weight: bold;
@@ -72,23 +73,16 @@
       min-width: 30px;
     }
 
-.dropzone {
-  display: flex;
+    .dropzone {
+  display: flex; /* ⬅️ más compatible con móviles */
   flex-wrap: wrap;
-  white-space: normal;
-  overflow-x: visible;
   gap: 5px;
-  width: 100%;
-  box-sizing: border-box;
   padding: 5px;
+  border: none; /* Quita el borde punteado */
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
 }
-
-
-
-
 
 /* Línea azul debajo como "renglón" */
 .dropzone::after {
@@ -99,8 +93,6 @@
   height: 2px;
   width: 100%;
   background-color: #007BFF; /* Azul */
-  width: 100%;
-
 }
 
 
@@ -115,19 +107,21 @@
       border-radius: 3px;
     }
 
-    
+    .dropzone {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
-  .word {
-  background-color: #ffffff;
-  border: 1px solid #a3c2f1;
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: move;
-  user-select: none;
-  white-space: normal;
-}
-
-
+    .word {
+      background-color: #ffffff;
+      border: 1px solid #a3c2f1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
     .word.correct {
       background-color: #d4edda;
@@ -193,21 +187,20 @@
   <script>
     const sentences = [
       "I get up at 7 a.m",
-"I don’t go to school on Saturdays",
-"Do I eat mushrooms?",
-"She always drinks fruit juice",
-"She doesn’t have breakfast",
-"Does she like tuna?",
-"He sometimes brushes his teeth",
-"He never goes to bed early",
-"Does he go to school every day?",
-"They rarely eat lettuce.",
-"They don’t drink water",
-"Do they have breakfast every morning?",
-"We never cook French fries",
-"We don’t have lunch at home",
-"Do we get dressed at 8 a.m?",
-     
+      "I don’t go to school on Saturdays",
+      "Do I eat mushrooms?",
+      "She always drinks fruit juice",
+      "She doesn’t have breakfas",
+      "Does she like tuna?",
+      "He sometimes brushes his teeth",
+      "He never goes to bed early",
+      "Does he go to school every day?
+      "They rarely eat lettuce",
+      "They don’t drink water",
+      "Do they have breakfast every morning?",
+      "We never cook French fries",
+      " We don’t have lunch at home",
+      "Do we get dressed at 8 a.m?",
       
     ];
 
@@ -220,10 +213,9 @@
     }
 
     function createSentence(sentence, index) {
-      const words = sentence
-  .replace(/\?/g, ' ?')   // agrega espacio antes del ?
-  .replace(/\./g, '')     // elimina el punto final
-  .split(' ');
+     const words = sentence
+  .replace(/\./g, '')  // elimina puntos
+  .match(/[\w’']+|\?/g);  // captura palabras con apóstrofes y signos de pregunta
 
       const shuffled = shuffleArray([...words]);
 
@@ -358,7 +350,7 @@ span.addEventListener("touchend", () => {
         if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
       });
 
-      document.getElementById("resultado").textContent = Correctas: ${correct} / ${total};
+      document.getElementById("resultado").textContent = `Correctas: ${correct} / ${total}`;
     }
 
     function resetAll() {
