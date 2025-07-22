@@ -199,7 +199,7 @@
       "They don’t drink water",
       "Do they have breakfast every morning?",
       "We never cook French fries",
-      " We don’t have lunch at home",
+      "We don’t have lunch at home",
       "Do we get dressed at 8 a.m?",
       
     ];
@@ -350,7 +350,8 @@ span.addEventListener("touchend", () => {
         if (userAnswer.join(' ') === correctAnswer.join(' ')) correct++;
       });
 
-      document.getElementById("resultado").textContent = Correctas: ${correct} / ${total};
+      document.getElementById("resultado").textContent = `Correctas: ${correct} / ${total}`;
+
     }
 
     function resetAll() {
