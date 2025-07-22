@@ -74,11 +74,11 @@
       min-width: 30px;
     }
 
-  .dropzone {
+ .dropzone {
   display: flex;
-  flex-wrap: nowrap;        /* ❌ No permitir saltos de línea */
-  overflow-x: auto;         /* ✅ Activar scroll horizontal si es necesario */
-  white-space: nowrap;      /* ✅ Asegurar que todo quede en línea */
+  flex-wrap: wrap;          /* ✅ Permitir que las palabras salten a la siguiente línea */
+  overflow-x: visible;      /* ✅ No scroll horizontal */
+  white-space: normal;      /* ✅ Permitir ajuste de texto */
   gap: 5px;
   padding: 5px;
   border: none;
@@ -86,6 +86,7 @@
   min-height: 40px;
   margin-bottom: 10px;
 }
+
 
 
 
