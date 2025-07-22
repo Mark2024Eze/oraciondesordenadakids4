@@ -76,17 +76,21 @@
 
 .dropzone {
   display: flex;
-  flex-wrap: wrap;            /* ✅ Permitir saltos de línea */
-  overflow-x: visible;        /* ✅ Sin scroll horizontal */
-  white-space: normal;        /* ✅ Permitir salto de línea */
+  flex-wrap: wrap;
+  overflow-x: visible;
+  white-space: normal;
   gap: 5px;
   padding: 5px;
   border: none;
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
-  width: 100%;                /* ✅ Ocupa todo el ancho disponible */
+  width: 100%;
   box-sizing: border-box;
+
+  /* scrollbar oculto */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 
@@ -117,10 +121,7 @@
       border-radius: 3px;
     }
 
-    .dropzone {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    
 
    .word {
   background-color: #ffffff;
