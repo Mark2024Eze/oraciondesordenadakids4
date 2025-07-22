@@ -76,16 +76,19 @@
 
 .dropzone {
   display: flex;
-  flex-wrap: wrap;          /* ✔ Permite salto de línea */
-  overflow-x: visible;      /* ✔ No scroll horizontal */
-  white-space: normal;      /* ✔ Permitir que el texto salte */
+  flex-wrap: wrap;            /* ✅ Permitir saltos de línea */
+  overflow-x: visible;        /* ✅ Sin scroll horizontal */
+  white-space: normal;        /* ✅ Permitir salto de línea */
   gap: 5px;
   padding: 5px;
   border: none;
   position: relative;
   min-height: 40px;
   margin-bottom: 10px;
+  width: 100%;                /* ✅ Ocupa todo el ancho disponible */
+  box-sizing: border-box;
 }
+
 
 
 
@@ -119,16 +122,17 @@
       scrollbar-width: none;
     }
 
-    .word {
-      background-color: #ffffff;
-      border: 1px solid #a3c2f1;
-      border-radius: 8px;
-      padding: 8px 12px;
-      cursor: move;
-      user-select: none;
-      white-space: normal; /* ✅ Permite que la palabra salte de línea si es necesario */
-      flex-shrink: 0;
-    }
+   .word {
+  background-color: #ffffff;
+  border: 1px solid #a3c2f1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: move;
+  user-select: none;
+  flex-shrink: 0;
+  white-space: normal; /* ✅ Esto permite que la palabra se adapte al ancho */
+}
+
 
     .word.correct {
       background-color: #d4edda;
